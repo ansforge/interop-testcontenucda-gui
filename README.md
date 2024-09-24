@@ -21,7 +21,7 @@ Ou cliquer sur le boutton Affichage des rapports pour afficher un rapport déjà
 
 **Prérequis :**
 
-Java doit être installé sur votre poste utilisateur. Version 19 ou plus. 
+Java doit être installé sur votre poste utilisateur. Version 19 ou ultérieure. 
 
 Vous devez disposer de testContenuCDA sur votre poste utilisateur.
 
@@ -29,7 +29,7 @@ Problème possible de lancement lié à Java
 
 Si vous avez l'exception "JVM Launcher exception", vous devez mettre à jour votre version de Java.
 
-Pour cela, installez la version 20 de Java (ou ultérieure) en cliquant sur le lien https://download.oracle.com/java/20/archive/jdk-20.0.2_windows-x64_bin.exe
+Pour cela, installez la version 19 de Java (ou ultérieure) en cliquant sur le lien https://download.oracle.com/java/19/archive/jdk-19.0.2_windows-x64_bin.exe
 
 Après l’installation de Java, ouvrez l’invite de commande (CMD) et tapez "java -version" pour vous assurer que la nouvelle version de Java est installée.
 
