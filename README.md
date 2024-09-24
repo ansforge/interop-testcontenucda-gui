@@ -15,9 +15,11 @@ Vous devez déposer les documents CDA à valider dans le répertoire ExemplesCDA
 
 Vous devez ensuite :
 
-En optionnel, choisir le document schématron relative au document CDA déjà sélectionné.
-Cliquer sur le boutton Création des rapports pour valider le document CDA.
-Ou cliquer sur le boutton Affichage des rapports pour afficher un rapport déjà crée.
+En optionnel, choisir le document schématron relative au document CDA déjà sélectionné. 
+
+Cliquer sur le boutton Création des rapports pour valider le document CDA. 
+
+Ou cliquer sur le boutton Affichage des rapports pour afficher un rapport déjà crée. 
 
 **Prérequis :**
 
