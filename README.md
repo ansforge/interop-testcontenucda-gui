@@ -1,33 +1,29 @@
 **Introduction :**
 
-TCC-GUI est un outil qui sert à faire la validation des documents CDA par rapport au schéma et aux schématrons
+TCC-GUI est un outil qui sert à faire la validation des documents CDA par rapport au schéma CDA et aux schématrons.
 
 TCC-GUI de l'ANS permet :
 
 La création des rapports pour un document CDA choisi par rapport au schéma et aux schématrons.
-D'afficher un rapport déjà crée pour un document CDA choisi.
+L'affichage du rapport déjà créé pour un document CDA choisi.
 
 **Utilisation de TCC-GUI de l'ANS :**
 
 Pour ouvrir TCC-GUI, double cliquez sur TCC-GUI.jar.
 
-Vous devez déposer les documents CDA à valider dans le répertoire ExemplesCDA de testContenuCDA (testContenuCDA est téléchargeable sur le lien https://github.com/ansforge/TestContenuCDA-3-0).
+Vous devez déposer les documents CDA à valider dans le répertoire ExemplesCDA du testContenuCDA, téléchargeable sur le lien https://github.com/ansforge/TestContenuCDA-3-0.
 
-Vous devez ensuite :
+Vous pourrez ensuite choisir le document schematron relatif au document CDA déjà sélectionné (optionnel). 
 
-En optionnel, choisir le document schématron relative au document CDA déjà sélectionné. 
+Pour valider le document CDA, il faut cliquer sur le boutton "Création des rapports". 
 
-Cliquer sur le boutton Création des rapports pour valider le document CDA. 
-
-Ou cliquer sur le boutton Affichage des rapports pour afficher un rapport déjà crée. 
+Pour afficher un rapport déjà créé, il faut cliquer sur le boutton "Affichage des rapports" . 
 
 **Prérequis :**
 
-Java doit être installé sur votre poste utilisateur. Version 19 ou ultérieure. 
+Vous devez disposer de l'outil testContenuCDA sur votre poste utilisateur.
 
-Vous devez disposer de testContenuCDA sur votre poste utilisateur.
-
-Problème possible de lancement lié à Java
+La version Java 19 ou une version ultérieure doit être installée sur votre poste utilisateur. 
 
 Si vous avez l'exception "JVM Launcher exception", vous devez mettre à jour votre version de Java.
 
