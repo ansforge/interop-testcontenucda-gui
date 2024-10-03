@@ -995,6 +995,237 @@ public class WebViewSample extends Application {
 						cls.setLbl8(lbl8);
 						cls.setLbl9(lbl9);
 						Inutility2.initLabel(cls);
+						if (outputFile == null) {
+							final File file = new File(text1.getText());
+							text1.setText(file.getAbsolutePath());
+							final String parent = file.getParentFile().getParent();
+							outputFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif_StructurationMinimale.xml");
+							outputIheFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif_IHE_corps.xml");
+							outputMCFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif_ModelesDeContenusCDA.xml");
+							outputAnsFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif_Modeles_ANS.xml");
+							outputTerminoFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif_terminologies.xml");
+							outputSchFile = new File(parent + Constant.REPPORT + "\\"
+									+ validator.removeExtension(file.getName()) + "_verif.xml");
+							validator.setXmlFile(file);
+							validator.setIncludeFile(parent + "\\schematrons\\moteur\\iso_dsdl_include.xsl");
+							validator.setExpandFile(parent + "\\schematrons\\moteur\\iso_abstract_expand.xsl");
+							validator.setSvrlFile(parent + "\\schematrons\\moteur\\iso_svrl_for_xslt2.xsl");
+							validator.setStructMinFile(parent
+									+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch");
+							validator.setStructMinXslFile(parent
+									+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.xsl");
+							validator.setStructMinBase(parent + "\\schematrons\\profils\\structurationMinimale");
+							validator.setMcCdaBase(parent + "\\schematrons\\profils");
+							validator.setStructMinReport(parent + Constant.REPPORT);
+							validator.setIheFile(parent + "\\schematrons\\profils\\IHE.sch");
+							validator.setMcCdaFile(parent + "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch");
+							validator.setTerminoBase(parent + "\\schematrons\\profils\\terminologies\\schematron");
+							validator.setSchBase(parent + "\\schematrons");
+							validator.setmAnsFile(parent + "\\schematrons\\profils\\CI-SIS_Modeles_ANS.sch");
+							validator.setTerminoFile(
+									parent + "\\schematrons\\profils\\terminologies\\schematron\\terminologie.sch");
+							try {
+								validator.setXmlNode(Inutility6.getProcessor(validator).newDocumentBuilder()
+										.build(new StreamSource(text1.getText())));
+							} catch (final SaxonApiException e) {
+								if (LOG.isInfoEnabled()) {
+									final String error = e.getMessage();
+									LOG.error(error);
+								}
+							}
+							final String repRepport = new File(text1.getText()).getParentFile().getParent()
+									+ Constant.REPPORT;
+							validator.setOutputFilePath(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_validCDA.xml"));
+							validator.setOutputFilePathSm(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_verif_StructurationMinimale.xml"));
+							validator.setOutputFilePathIhe(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_verif_IHE_corps.xml"));
+							validator.setOutputFilePathMc(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_verif_ModelesDeContenusCDA.xml"));
+							validator.setOutputFilePathAns(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_verif_Modeles_ANS.xml"));
+							validator.setOutputFilePathTer(new File(
+									repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+											+ "_verif_terminologies.xml"));
+							validator.setOutputFilePathSch(new File(repRepport + "\\"
+									+ validator.removeExtension(new File(text1.getText()).getName()) + "_verif.xml"));
+							if (outputFile.exists()) {
+								final long lastModifiedO = outputFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String schFile = parent
+										+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+
+								List<Long> listDate;
+								listDate = processIncludes(schFile,
+										new File(parent + "\\schematrons\\profils\\structurationMinimale\\include"));
+
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									for (final Long date : listDate) {
+										if (lastModifiedO > date) {
+											smExiste = true;
+										} else {
+											smExiste = false;
+											break;
+										}
+									}
+								} else {
+									smExiste = false;
+								}
+							}
+							if (outputIheFile.exists()) {
+								final long lastModifiedO = outputIheFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String schFile = parent + "\\schematrons\\profils\\IHE.sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+								List<Long> listDate;
+								List<Long> listDateS;
+								listDate = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\entrees"));
+								listDateS = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\sections"));
+								listDate.addAll(listDateS);
+
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									if (listDate != null) {
+										for (final Long date : listDate) {
+											if (lastModifiedO > date) {
+												iheExiste = true;
+											} else {
+												iheExiste = false;
+												break;
+											}
+										}
+									}
+								} else {
+									iheExiste = false;
+								}
+							}
+							if (outputMCFile.exists()) {
+								final long lastModifiedO = outputMCFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String schFile = parent
+										+ "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+								List<Long> listDate;
+								List<Long> listDateS;
+								List<Long> listDateA;
+								listDate = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\entrees"));
+								listDateS = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\jeuxDeValeurs"));
+								listDateA = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
+								listDate.addAll(listDateS);
+								listDate.addAll(listDateA);
+
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									if (listDate != null) {
+										for (final Long date : listDate) {
+											if (lastModifiedO > date) {
+												mcExiste = true;
+											} else {
+												mcExiste = false;
+												break;
+											}
+										}
+									}
+								} else {
+									mcExiste = false;
+								}
+							}
+							if (outputAnsFile.exists()) {
+								final long lastModifiedO = outputAnsFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String schFile = parent + "\\schematrons\\profils\\CI-SIS_Modeles_ANS.sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+								List<Long> listDate;
+								List<Long> listDateS;
+								listDate = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\entrees"));
+								listDateS = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\sections"));
+								listDate.addAll(listDateS);
+
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									if (listDate != null) {
+										for (final Long date : listDate) {
+											if (lastModifiedO > date) {
+												ansExiste = true;
+											} else {
+												ansExiste = false;
+												break;
+											}
+										}
+									}
+								} else {
+									ansExiste = false;
+								}
+							}
+							if (outputTerminoFile.exists()) {
+								final long lastModifiedO = outputTerminoFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String schFile = parent
+										+ "\\schematrons\\profils\\terminologies\\schematron\\terminologie.sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									terminoExiste = true;
+								} else {
+									terminoExiste = false;
+								}
+							}
+							if (outputSchFile.exists() && !text1.getText().isEmpty()) {
+								final long lastModifiedO = outputSchFile.lastModified();
+								final long lastModifiedF = file.lastModified();
+								final String nameRemove = validator.removeExtension(file.getName());
+								final String schFile = parent + "\\schematrons\\" + "CI-SIS_" + nameRemove + ".sch";
+								final long lastModifiedS = new File(schFile).lastModified();
+
+								List<Long> listDate;
+								List<Long> listDateJ;
+								List<Long> listDateE;
+								List<Long> listDateS;
+								List<Long> listDateEn;
+								listDate = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
+								listDateJ = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\jeuxDeValeurs\\" + nameRemove));
+								listDateE = processIncludes(schFile, new File(parent
+										+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entete"));
+								listDateS = processIncludes(schFile,
+										new File(parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove
+												+ "\\Sections"));
+								listDateEn = processIncludes(schFile, new File(parent
+										+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entrees"));
+								listDate.addAll(listDateJ);
+								listDate.addAll(listDateE);
+								listDate.addAll(listDateS);
+								listDate.addAll(listDateEn);
+
+								if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+									for (final Long date : listDate) {
+										if (lastModifiedO > date) {
+											schExiste = true;
+										} else {
+											schExiste = false;
+											break;
+										}
+									}
+								} else {
+									schExiste = false;
+								}
+							}
+						}
+
 						final File recordsDir = new File(text1.getText());
 						sNomFichierCDA = new File(text1.getText()).getName().replaceFirst("[.][^.]+$", "");
 						final String rapportFolder = recordsDir.getParentFile().getParent().concat(Constant.FOLDER_RAP);
@@ -1712,6 +1943,237 @@ public class WebViewSample extends Application {
 				lbl7.setText("");
 				lbl8.setText("");
 				lbl9.setText("");
+				if (outputFile == null) {
+					final File file = new File(text1.getText());
+					text1.setText(file.getAbsolutePath());
+					final String parent = file.getParentFile().getParent();
+					outputFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif_StructurationMinimale.xml");
+					outputIheFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif_IHE_corps.xml");
+					outputMCFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif_ModelesDeContenusCDA.xml");
+					outputAnsFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif_Modeles_ANS.xml");
+					outputTerminoFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif_terminologies.xml");
+					outputSchFile = new File(parent + Constant.REPPORT + "\\"
+							+ validator.removeExtension(file.getName()) + "_verif.xml");
+					validator.setXmlFile(file);
+					validator.setIncludeFile(parent + "\\schematrons\\moteur\\iso_dsdl_include.xsl");
+					validator.setExpandFile(parent + "\\schematrons\\moteur\\iso_abstract_expand.xsl");
+					validator.setSvrlFile(parent + "\\schematrons\\moteur\\iso_svrl_for_xslt2.xsl");
+					validator.setStructMinFile(parent
+							+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch");
+					validator.setStructMinXslFile(parent
+							+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.xsl");
+					validator.setStructMinBase(parent + "\\schematrons\\profils\\structurationMinimale");
+					validator.setMcCdaBase(parent + "\\schematrons\\profils");
+					validator.setStructMinReport(parent + Constant.REPPORT);
+					validator.setIheFile(parent + "\\schematrons\\profils\\IHE.sch");
+					validator.setMcCdaFile(parent + "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch");
+					validator.setTerminoBase(parent + "\\schematrons\\profils\\terminologies\\schematron");
+					validator.setSchBase(parent + "\\schematrons");
+					validator.setmAnsFile(parent + "\\schematrons\\profils\\CI-SIS_Modeles_ANS.sch");
+					validator.setTerminoFile(
+							parent + "\\schematrons\\profils\\terminologies\\schematron\\terminologie.sch");
+					try {
+						validator.setXmlNode(Inutility6.getProcessor(validator).newDocumentBuilder()
+								.build(new StreamSource(text1.getText())));
+					} catch (final SaxonApiException e) {
+						if (LOG.isInfoEnabled()) {
+							final String error = e.getMessage();
+							LOG.error(error);
+						}
+					}
+					final String repRepport = new File(text1.getText()).getParentFile().getParent()
+							+ Constant.REPPORT;
+					validator.setOutputFilePath(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_validCDA.xml"));
+					validator.setOutputFilePathSm(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_verif_StructurationMinimale.xml"));
+					validator.setOutputFilePathIhe(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_verif_IHE_corps.xml"));
+					validator.setOutputFilePathMc(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_verif_ModelesDeContenusCDA.xml"));
+					validator.setOutputFilePathAns(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_verif_Modeles_ANS.xml"));
+					validator.setOutputFilePathTer(new File(
+							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+									+ "_verif_terminologies.xml"));
+					validator.setOutputFilePathSch(new File(repRepport + "\\"
+							+ validator.removeExtension(new File(text1.getText()).getName()) + "_verif.xml"));
+					if (outputFile.exists()) {
+						final long lastModifiedO = outputFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String schFile = parent
+								+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+
+						List<Long> listDate;
+						listDate = processIncludes(schFile,
+								new File(parent + "\\schematrons\\profils\\structurationMinimale\\include"));
+
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							for (final Long date : listDate) {
+								if (lastModifiedO > date) {
+									smExiste = true;
+								} else {
+									smExiste = false;
+									break;
+								}
+							}
+						} else {
+							smExiste = false;
+						}
+					}
+					if (outputIheFile.exists()) {
+						final long lastModifiedO = outputIheFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String schFile = parent + "\\schematrons\\profils\\IHE.sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+						List<Long> listDate;
+						List<Long> listDateS;
+						listDate = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\entrees"));
+						listDateS = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\sections"));
+						listDate.addAll(listDateS);
+
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							if (listDate != null) {
+								for (final Long date : listDate) {
+									if (lastModifiedO > date) {
+										iheExiste = true;
+									} else {
+										iheExiste = false;
+										break;
+									}
+								}
+							}
+						} else {
+							iheExiste = false;
+						}
+					}
+					if (outputMCFile.exists()) {
+						final long lastModifiedO = outputMCFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String schFile = parent
+								+ "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+						List<Long> listDate;
+						List<Long> listDateS;
+						List<Long> listDateA;
+						listDate = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\entrees"));
+						listDateS = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\jeuxDeValeurs"));
+						listDateA = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
+						listDate.addAll(listDateS);
+						listDate.addAll(listDateA);
+
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							if (listDate != null) {
+								for (final Long date : listDate) {
+									if (lastModifiedO > date) {
+										mcExiste = true;
+									} else {
+										mcExiste = false;
+										break;
+									}
+								}
+							}
+						} else {
+							mcExiste = false;
+						}
+					}
+					if (outputAnsFile.exists()) {
+						final long lastModifiedO = outputAnsFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String schFile = parent + "\\schematrons\\profils\\CI-SIS_Modeles_ANS.sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+						List<Long> listDate;
+						List<Long> listDateS;
+						listDate = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\entrees"));
+						listDateS = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\sections"));
+						listDate.addAll(listDateS);
+
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							if (listDate != null) {
+								for (final Long date : listDate) {
+									if (lastModifiedO > date) {
+										ansExiste = true;
+									} else {
+										ansExiste = false;
+										break;
+									}
+								}
+							}
+						} else {
+							ansExiste = false;
+						}
+					}
+					if (outputTerminoFile.exists()) {
+						final long lastModifiedO = outputTerminoFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String schFile = parent
+								+ "\\schematrons\\profils\\terminologies\\schematron\\terminologie.sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							terminoExiste = true;
+						} else {
+							terminoExiste = false;
+						}
+					}
+					if (outputSchFile.exists() && !text1.getText().isEmpty()) {
+						final long lastModifiedO = outputSchFile.lastModified();
+						final long lastModifiedF = file.lastModified();
+						final String nameRemove = validator.removeExtension(file.getName());
+						final String schFile = parent + "\\schematrons\\" + "CI-SIS_" + nameRemove + ".sch";
+						final long lastModifiedS = new File(schFile).lastModified();
+
+						List<Long> listDate;
+						List<Long> listDateJ;
+						List<Long> listDateE;
+						List<Long> listDateS;
+						List<Long> listDateEn;
+						listDate = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
+						listDateJ = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\jeuxDeValeurs\\" + nameRemove));
+						listDateE = processIncludes(schFile, new File(parent
+								+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entete"));
+						listDateS = processIncludes(schFile,
+								new File(parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove
+										+ "\\Sections"));
+						listDateEn = processIncludes(schFile, new File(parent
+								+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entrees"));
+						listDate.addAll(listDateJ);
+						listDate.addAll(listDateE);
+						listDate.addAll(listDateS);
+						listDate.addAll(listDateEn);
+
+						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
+							for (final Long date : listDate) {
+								if (lastModifiedO > date) {
+									schExiste = true;
+								} else {
+									schExiste = false;
+									break;
+								}
+							}
+						} else {
+							schExiste = false;
+						}
+					}
+				}
+				
 				final Task<Void> loadTask = new Task<>() {
 					@Override
 					protected Void call() throws InterruptedException {
