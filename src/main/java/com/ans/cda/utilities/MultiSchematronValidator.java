@@ -224,7 +224,7 @@ public class MultiSchematronValidator {
 			final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			final Schema schema = schemaFactory.newSchema(new File(xsdFile));
 			final Validator validator = schema.newValidator();
-			final Source xmlSource = new StreamSource(xmlFile);
+			final Source xmlSource = new StreamSource(xmlPath);
 			try {
 				validator.validate(xmlSource);
 				writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<xsd-validation result=\"OK\">\r\n"
