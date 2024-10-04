@@ -439,6 +439,10 @@ public class WebViewSample extends Application {
 	 */
 	private static TextField text2;
 	/**
+	 * extern
+	 */
+	private static boolean extern;
+	/**
 	 * validator
 	 */
 	private static MultiSchematronValidator validator = new MultiSchematronValidator();
@@ -459,6 +463,7 @@ public class WebViewSample extends Application {
 			final String locale = args[1];
 			Inutility.switchLanguage(Locale.forLanguageTag(locale));
 			Inutility.setLocale(Locale.forLanguageTag(locale));
+			extern = true;
 		} else {
 			Inutility.setLocale(Locale.getDefault());
 			final File file = new File(userDirectory).getParentFile().getParentFile().getParentFile();
@@ -995,7 +1000,13 @@ public class WebViewSample extends Application {
 						cls.setLbl8(lbl8);
 						cls.setLbl9(lbl9);
 						Inutility2.initLabel(cls);
-						if (outputFile == null) {
+						if (extern) {
+							smExiste = false;
+							iheExiste = false;
+							mcExiste = false;
+							ansExiste = false;
+							terminoExiste = false;
+							schExiste = false;
 							final File file = new File(text1.getText());
 							text1.setText(file.getAbsolutePath());
 							final String parent = file.getParentFile().getParent();
@@ -1943,16 +1954,22 @@ public class WebViewSample extends Application {
 				lbl7.setText("");
 				lbl8.setText("");
 				lbl9.setText("");
-				if (outputFile == null) {
+				if (extern) {
+					smExiste = false;
+					iheExiste = false;
+					mcExiste = false;
+					ansExiste = false;
+					terminoExiste = false;
+					schExiste = false;
 					final File file = new File(text1.getText());
 					text1.setText(file.getAbsolutePath());
 					final String parent = file.getParentFile().getParent();
-					outputFile = new File(parent + Constant.REPPORT + "\\"
-							+ validator.removeExtension(file.getName()) + "_verif_StructurationMinimale.xml");
+					outputFile = new File(parent + Constant.REPPORT + "\\" + validator.removeExtension(file.getName())
+							+ "_verif_StructurationMinimale.xml");
 					outputIheFile = new File(parent + Constant.REPPORT + "\\"
 							+ validator.removeExtension(file.getName()) + "_verif_IHE_corps.xml");
-					outputMCFile = new File(parent + Constant.REPPORT + "\\"
-							+ validator.removeExtension(file.getName()) + "_verif_ModelesDeContenusCDA.xml");
+					outputMCFile = new File(parent + Constant.REPPORT + "\\" + validator.removeExtension(file.getName())
+							+ "_verif_ModelesDeContenusCDA.xml");
 					outputAnsFile = new File(parent + Constant.REPPORT + "\\"
 							+ validator.removeExtension(file.getName()) + "_verif_Modeles_ANS.xml");
 					outputTerminoFile = new File(parent + Constant.REPPORT + "\\"
@@ -1963,10 +1980,10 @@ public class WebViewSample extends Application {
 					validator.setIncludeFile(parent + "\\schematrons\\moteur\\iso_dsdl_include.xsl");
 					validator.setExpandFile(parent + "\\schematrons\\moteur\\iso_abstract_expand.xsl");
 					validator.setSvrlFile(parent + "\\schematrons\\moteur\\iso_svrl_for_xslt2.xsl");
-					validator.setStructMinFile(parent
-							+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch");
-					validator.setStructMinXslFile(parent
-							+ "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.xsl");
+					validator.setStructMinFile(
+							parent + "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.sch");
+					validator.setStructMinXslFile(
+							parent + "\\schematrons\\profils\\structurationMinimale\\ASIP-STRUCT-MIN-StrucMin.xsl");
 					validator.setStructMinBase(parent + "\\schematrons\\profils\\structurationMinimale");
 					validator.setMcCdaBase(parent + "\\schematrons\\profils");
 					validator.setStructMinReport(parent + Constant.REPPORT);
@@ -1986,25 +2003,22 @@ public class WebViewSample extends Application {
 							LOG.error(error);
 						}
 					}
-					final String repRepport = new File(text1.getText()).getParentFile().getParent()
-							+ Constant.REPPORT;
-					validator.setOutputFilePath(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
-									+ "_validCDA.xml"));
-					validator.setOutputFilePathSm(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+					final String repRepport = new File(text1.getText()).getParentFile().getParent() + Constant.REPPORT;
+					validator.setOutputFilePath(new File(repRepport + "\\"
+							+ validator.removeExtension(new File(text1.getText()).getName()) + "_validCDA.xml"));
+					validator.setOutputFilePathSm(
+							new File(repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
 									+ "_verif_StructurationMinimale.xml"));
-					validator.setOutputFilePathIhe(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
-									+ "_verif_IHE_corps.xml"));
-					validator.setOutputFilePathMc(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+					validator.setOutputFilePathIhe(new File(repRepport + "\\"
+							+ validator.removeExtension(new File(text1.getText()).getName()) + "_verif_IHE_corps.xml"));
+					validator.setOutputFilePathMc(
+							new File(repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
 									+ "_verif_ModelesDeContenusCDA.xml"));
-					validator.setOutputFilePathAns(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+					validator.setOutputFilePathAns(
+							new File(repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
 									+ "_verif_Modeles_ANS.xml"));
-					validator.setOutputFilePathTer(new File(
-							repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
+					validator.setOutputFilePathTer(
+							new File(repRepport + "\\" + validator.removeExtension(new File(text1.getText()).getName())
 									+ "_verif_terminologies.xml"));
 					validator.setOutputFilePathSch(new File(repRepport + "\\"
 							+ validator.removeExtension(new File(text1.getText()).getName()) + "_verif.xml"));
@@ -2039,10 +2053,8 @@ public class WebViewSample extends Application {
 						final long lastModifiedS = new File(schFile).lastModified();
 						List<Long> listDate;
 						List<Long> listDateS;
-						listDate = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\entrees"));
-						listDateS = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\sections"));
+						listDate = processIncludes(schFile, new File(parent + "\\schematrons\\include\\entrees"));
+						listDateS = processIncludes(schFile, new File(parent + "\\schematrons\\include\\sections"));
 						listDate.addAll(listDateS);
 
 						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
@@ -2063,14 +2075,12 @@ public class WebViewSample extends Application {
 					if (outputMCFile.exists()) {
 						final long lastModifiedO = outputMCFile.lastModified();
 						final long lastModifiedF = file.lastModified();
-						final String schFile = parent
-								+ "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch";
+						final String schFile = parent + "\\schematrons\\profils\\CI-SIS_ModelesDeContenusCDA.sch";
 						final long lastModifiedS = new File(schFile).lastModified();
 						List<Long> listDate;
 						List<Long> listDateS;
 						List<Long> listDateA;
-						listDate = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\entrees"));
+						listDate = processIncludes(schFile, new File(parent + "\\schematrons\\include\\entrees"));
 						listDateS = processIncludes(schFile,
 								new File(parent + "\\schematrons\\include\\jeuxDeValeurs"));
 						listDateA = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
@@ -2099,10 +2109,8 @@ public class WebViewSample extends Application {
 						final long lastModifiedS = new File(schFile).lastModified();
 						List<Long> listDate;
 						List<Long> listDateS;
-						listDate = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\entrees"));
-						listDateS = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\sections"));
+						listDate = processIncludes(schFile, new File(parent + "\\schematrons\\include\\entrees"));
+						listDateS = processIncludes(schFile, new File(parent + "\\schematrons\\include\\sections"));
 						listDate.addAll(listDateS);
 
 						if ((lastModifiedO > lastModifiedF) && (lastModifiedO > lastModifiedS)) {
@@ -2147,13 +2155,12 @@ public class WebViewSample extends Application {
 						listDate = processIncludes(schFile, new File(parent + "\\schematrons\\abstract"));
 						listDateJ = processIncludes(schFile,
 								new File(parent + "\\schematrons\\include\\jeuxDeValeurs\\" + nameRemove));
-						listDateE = processIncludes(schFile, new File(parent
-								+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entete"));
-						listDateS = processIncludes(schFile,
-								new File(parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove
-										+ "\\Sections"));
-						listDateEn = processIncludes(schFile, new File(parent
-								+ "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entrees"));
+						listDateE = processIncludes(schFile, new File(
+								parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entete"));
+						listDateS = processIncludes(schFile, new File(
+								parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Sections"));
+						listDateEn = processIncludes(schFile, new File(
+								parent + "\\schematrons\\include\\specificationsVolets\\" + nameRemove + "\\Entrees"));
 						listDate.addAll(listDateJ);
 						listDate.addAll(listDateE);
 						listDate.addAll(listDateS);
@@ -2173,7 +2180,7 @@ public class WebViewSample extends Application {
 						}
 					}
 				}
-				
+
 				final Task<Void> loadTask = new Task<>() {
 					@Override
 					protected Void call() throws InterruptedException {
@@ -2191,7 +2198,6 @@ public class WebViewSample extends Application {
 						progressIndicator.setVisible(false);
 						ExecutorService executorService;
 						final List<File> xmlFiles = new ArrayList<>();
-
 						if (text2.getText().isEmpty()) {
 							executorService = Executors.newFixedThreadPool(5);
 							xmlFiles.add(validator.getOutputFilePathSm());
