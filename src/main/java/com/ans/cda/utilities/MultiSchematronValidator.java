@@ -225,19 +225,24 @@ public class MultiSchematronValidator {
 			final Schema schema = schemaFactory.newSchema(new File(xsdFile));
 			final Validator validator = schema.newValidator();
 			final Source xmlSource = new StreamSource(xmlPath);
-			try {
-				validator.validate(xmlSource);
-				writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<xsd-validation result=\"OK\">\r\n"
-						+ "</xsd-validation>");
-			} catch (final SAXException e) {
-				writer.println("XML is not valid: " + e.getMessage());
-			}
-
+			validateAndWrite(validator, xmlSource, writer);
 		} catch (final SAXException | IOException e) {
 			if (LOG.isInfoEnabled()) {
 				final String error = e.getMessage();
 				LOG.error(error);
 			}
+		}
+	}
+
+	private void validateAndWrite(final Validator validator, final Source xmlSource, final PrintWriter writer) {
+		try {
+			validator.validate(xmlSource);
+			writer.println("""
+					<?xml version="1.0" encoding="UTF-8"?>\r
+					<xsd-validation result="OK">\r
+					</xsd-validation>""");
+		} catch (final SAXException | IOException e) {
+			writer.println("XML is not valid: " + e.getMessage());
 		}
 	}
 
